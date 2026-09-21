@@ -67,7 +67,7 @@ def main():
         sys.exit(
             "MediaCrawler 的抖音链路要一个能正常打开 douyin.com 的浏览器页面来算签名，\n"
             "而本机浏览器访问 douyin.com 会直接被 403（curl 同 UA 却是 200，属于浏览器指纹被拦）。\n"
-            "抖音评论请改用同目录下的纯 HTTP 版：/opt/auth-hub/dy_comments.py <视频ID>"
+            "抖音评论请改用同目录下的纯 HTTP 版：dy_comments.py <视频ID>"
         )
 
     cmd = [

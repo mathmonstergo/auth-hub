@@ -1,4 +1,4 @@
-const { chromium } = require('/opt/auth-hub/node_modules/playwright');
+const { chromium } = require('./node_modules/playwright');
 const fs = require('fs');
 const path = require('path');
 
@@ -8,10 +8,10 @@ const SMS_INPUT_FILE = path.join(RUNTIME_DIR, 'xhs_sms_code.txt');
 const ACTION_FILE = path.join(RUNTIME_DIR, 'xhs_action.json');
 const LIVE_SHOT = path.join(RUNTIME_DIR, 'xhs_live.png');
 const LOG_FILE = '/var/log/auth-hub/xhs.log';
-const SHOT_DIR = '/opt/auth-hub/shots';
+const SHOT_DIR = path.join(__dirname, 'shots');
 const HERMES_DIR = '/home/ubuntu/.hermes';
 const XHS_COOKIE_PATH = path.join(HERMES_DIR, 'xhs_cookie.json');
-const XHS_META_PATH = '/opt/auth-hub/xhs_meta.json';
+const XHS_META_PATH = path.join(__dirname, 'xhs_meta.json');
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
 
 const QR_SELECTOR = 'img.qrcode-img';

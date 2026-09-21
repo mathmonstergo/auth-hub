@@ -25,7 +25,7 @@ from datetime import datetime
 import mc_feed
 
 PORT = 8318
-APP_DIR = "/opt/auth-hub"
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
 HERMES_DIR = "/home/ubuntu/.hermes"
 
 # 元数据路径
