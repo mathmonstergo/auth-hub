@@ -759,7 +759,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With")
 
     # 无需登录即可访问的路径（登录页与站点图标）
-    PUBLIC_PATHS = ("/login", "/api/login", "/favicon.svg", "/favicon.ico", "/favicon.png")
+    PUBLIC_PATHS = ("/login", "/api/login", "/assets/favicon.svg", "/assets/favicon.ico", "/assets/favicon.png")
 
     def is_authenticated(self) -> bool:
         header_token = self.headers.get("X-Auth-Token", "")
@@ -815,7 +815,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self.send_cors_headers()
             self.end_headers()
             self.wfile.write(HTML_CONTENT.encode("utf-8"))
-        elif clean_path in ("/bili_logo.png", "/xhs_logo.png", "/douyin_logo.png", "/weibo_logo.png", "/tieba_logo.png", "/zhihu_logo.png", "/favicon.ico", "/favicon.png"):
+        elif clean_path in ("/assets/bili_logo.png", "/assets/xhs_logo.png", "/assets/douyin_logo.png", "/assets/weibo_logo.png", "/assets/tieba_logo.png", "/assets/zhihu_logo.png", "/assets/favicon.ico", "/assets/favicon.png"):
             fname = clean_path.lstrip("/")
             fpath = os.path.join(APP_DIR, fname)
             if os.path.exists(fpath):
@@ -831,9 +831,9 @@ class Handler(http.server.BaseHTTPRequestHandler):
             else:
                 self.send_response(404)
                 self.end_headers()
-        elif clean_path in ("/weibo_logo.svg", "/favicon.svg"):
+        elif clean_path in ("/assets/weibo_logo.svg", "/assets/favicon.svg"):
             fname = clean_path.lstrip("/")
-            fpath = os.path.join(APP_DIR, fname) if fname != "favicon.svg" else None
+            fpath = os.path.join(APP_DIR, fname) if fname != "assets/favicon.svg" else None
             self.send_response(200)
             self.send_header("Content-Type", "image/svg+xml")
             self.send_header("Cache-Control", "no-store")
@@ -1024,7 +1024,7 @@ LOGIN_HTML = r"""<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>凭据中枢 · Auth Hub</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
     <style>
         :root {
             --bg-page: #F6F8FA;
@@ -1141,7 +1141,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>凭据中枢 · Auth Hub</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
     <style>
         :root {
             --hairline: 0.5px;
@@ -1512,7 +1512,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
             <div class="brand-card" onclick="openModal('bili')">
                 <div class="brand-logo-wrap">
                     <span id="dot-bili" class="brand-status-dot"></span>
-                    <img class="brand-logo-img" src="bili_logo.png" alt="哔哩哔哩">
+                    <img class="brand-logo-img" src="assets/bili_logo.png" alt="哔哩哔哩">
                 </div>
                 <span class="brand-name">哔哩哔哩</span>
             </div>
@@ -1521,7 +1521,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
             <div class="brand-card" onclick="openModal('xhs')">
                 <div class="brand-logo-wrap">
                     <span id="dot-xhs" class="brand-status-dot"></span>
-                    <img class="brand-logo-img" src="xhs_logo.png" alt="小红书">
+                    <img class="brand-logo-img" src="assets/xhs_logo.png" alt="小红书">
                 </div>
                 <span class="brand-name">小红书</span>
             </div>
@@ -1530,7 +1530,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
             <div class="brand-card" onclick="openModal('douyin')">
                 <div class="brand-logo-wrap">
                     <span id="dot-douyin" class="brand-status-dot"></span>
-                    <img class="brand-logo-img" src="douyin_logo.png?v=2" alt="抖音">
+                    <img class="brand-logo-img" src="assets/douyin_logo.png?v=2" alt="抖音">
                 </div>
                 <span class="brand-name">抖音</span>
             </div>
@@ -1539,7 +1539,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
             <div class="brand-card" onclick="openModal('weibo')">
                 <div class="brand-logo-wrap">
                     <span id="dot-weibo" class="brand-status-dot"></span>
-                    <img class="brand-logo-img" src="weibo_logo.png?v=2" alt="微博">
+                    <img class="brand-logo-img" src="assets/weibo_logo.png?v=2" alt="微博">
                 </div>
                 <span class="brand-name">微博</span>
             </div>
@@ -1548,7 +1548,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
             <div class="brand-card" onclick="openModal('tieba')">
                 <div class="brand-logo-wrap">
                     <span id="dot-tieba" class="brand-status-dot"></span>
-                    <img class="brand-logo-img" src="tieba_logo.png" alt="百度贴吧">
+                    <img class="brand-logo-img" src="assets/tieba_logo.png" alt="百度贴吧">
                 </div>
                 <span class="brand-name">百度贴吧</span>
             </div>
@@ -1557,7 +1557,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
             <div class="brand-card" onclick="openModal('zhihu')">
                 <div class="brand-logo-wrap">
                     <span id="dot-zhihu" class="brand-status-dot"></span>
-                    <img class="brand-logo-img" src="zhihu_logo.png" alt="知乎">
+                    <img class="brand-logo-img" src="assets/zhihu_logo.png" alt="知乎">
                 </div>
                 <span class="brand-name">知乎</span>
             </div>
@@ -1570,7 +1570,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
         <div id="dialog-bili" class="modal-dialog" style="display:none;">
             <div class="modal-header">
                 <span class="modal-title">
-                    <img class="modal-brand-thumb" src="bili_logo.png" alt="Bili">
+                    <img class="modal-brand-thumb" src="assets/bili_logo.png" alt="Bili">
                     哔哩哔哩凭据维护
                 </span>
                 <button class="btn-close" onclick="closeModal()">
@@ -1602,7 +1602,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
         <div id="dialog-xhs" class="modal-dialog" style="display:none;">
             <div class="modal-header">
                 <span class="modal-title">
-                    <img class="modal-brand-thumb" src="xhs_logo.png" alt="XHS">
+                    <img class="modal-brand-thumb" src="assets/xhs_logo.png" alt="XHS">
                     小红书 Web Token
                 </span>
                 <button class="btn-close" onclick="closeModal()">
@@ -1631,7 +1631,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
         <div id="dialog-douyin" class="modal-dialog" style="display:none;">
             <div class="modal-header">
                 <span class="modal-title">
-                    <img class="modal-brand-thumb" src="douyin_logo.png?v=2" alt="抖音">
+                    <img class="modal-brand-thumb" src="assets/douyin_logo.png?v=2" alt="抖音">
                     抖音 Web Token
                 </span>
                 <button class="btn-close" onclick="closeModal()">
@@ -1660,7 +1660,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
         <div id="dialog-weibo" class="modal-dialog" style="display:none;">
             <div class="modal-header">
                 <span class="modal-title">
-                    <img class="modal-brand-thumb" src="weibo_logo.png?v=2" alt="微博">
+                    <img class="modal-brand-thumb" src="assets/weibo_logo.png?v=2" alt="微博">
                     微博 Web Token
                 </span>
                 <button class="btn-close" onclick="closeModal()">
@@ -1689,7 +1689,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
         <div id="dialog-tieba" class="modal-dialog" style="display:none;">
             <div class="modal-header">
                 <span class="modal-title">
-                    <img class="modal-brand-thumb" src="tieba_logo.png" alt="贴吧">
+                    <img class="modal-brand-thumb" src="assets/tieba_logo.png" alt="贴吧">
                     百度贴吧 Web Cookie
                 </span>
                 <button class="btn-close" onclick="closeModal()">
@@ -1718,7 +1718,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
         <div id="dialog-zhihu" class="modal-dialog" style="display:none;">
             <div class="modal-header">
                 <span class="modal-title">
-                    <img class="modal-brand-thumb" src="zhihu_logo.png" alt="知乎">
+                    <img class="modal-brand-thumb" src="assets/zhihu_logo.png" alt="知乎">
                     知乎 Web Cookie
                 </span>
                 <button class="btn-close" onclick="closeModal()">

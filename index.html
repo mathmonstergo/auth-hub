@@ -3,68 +3,157 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>auth-hub</title>
+<title>凭据中枢 · auth-hub</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <style>
 :root {
-  --bg: #F6F8FA;
+  --hairline: 0.5px;
+  --bg-page: #F6F8FA;
+  --bg-panel: #FFFFFF;
+  --bg-hover: #F1F5F9;
+  --bg-active: #E2E8F0;
   --line: #E2E8F0;
-  --tx: #0F172A;
-  --muted: #64748B;
+  --line-strong: #94A3B8;
+  --line-weak: #F1F5F9;
+  --tx-main: #0F172A;
+  --tx-body: #1F2328;
+  --tx-muted: #64748B;
   --accent: #0284C7;
-  --ease: cubic-bezier(.16, 1, .3, 1);
+  --ok: #10B981;
+  --r-md: 6px;
+  --r-lg: 8px;
+  --r-xl: 12px;
+  --r-full: 9999px;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --t-color: 120ms;
+  --t-float: 180ms;
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+  --sh-float: 0 0 0 var(--hairline) rgba(0,0,0,.16), 0 3px 8px 0 rgba(0,0,0,.04), 0 0 20px 0 rgba(0,0,0,.05);
 }
-* { box-sizing: border-box; }
-html, body { margin: 0; height: 100%; }
-body {
-  background: var(--bg);
-  color: var(--tx);
-  font: 400 14px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px 20px;
-}
-main { width: 100%; max-width: 560px; }
-h1 { font-size: 20px; font-weight: 500; margin: 0 0 6px; }
-.sub { color: var(--muted); margin: 0 0 30px; }
-h2 { font-size: 13px; font-weight: 500; color: var(--muted); margin: 28px 0 10px; letter-spacing: .02em; }
-ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
-li {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 10px 2px;
-  border-bottom: 1px solid var(--line);
-}
-li span:last-child { color: var(--muted); }
-a {
-  color: var(--accent);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color 160ms var(--ease);
-}
-a:hover { border-bottom-color: var(--accent); }
-footer { margin-top: 32px; color: var(--muted); font-size: 12px; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg-page); color: var(--tx-body); font: 400 13px/20px var(--font-ui); -webkit-font-smoothing: antialiased; }
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: inherit; }
+.app-shell { height: 100%; display: flex; flex-direction: column; align-items: center; overflow-y: auto; padding: 64px 16px; }
+.header-box { width: 100%; max-width: 560px; margin-bottom: 32px; display: flex; align-items: center; gap: 10px; }
+.header-icon { width: 26px; height: 26px; color: var(--tx-main); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.header-title { font-size: 15px; line-height: 22px; font-weight: 500; color: var(--tx-main); margin: 0; }
+.auth-grid { width: 100%; max-width: 560px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.brand-card { background: transparent; border: var(--hairline) solid transparent; border-radius: var(--r-xl); padding: 16px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; user-select: none; transition: background-color var(--t-color) ease, border-color var(--t-color) ease; }
+.brand-card:hover { background: var(--bg-hover); border-color: var(--line-weak); }
+.brand-card:active { background: var(--bg-active); }
+.brand-logo-wrap { position: relative; width: 68px; height: 68px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; background: #FFFFFF; border-radius: 16px; border: var(--hairline) solid var(--line); }
+.brand-logo-img { width: 100%; height: 100%; border-radius: 15px; object-fit: contain; display: block; }
+.brand-status-dot { position: absolute; top: -3px; right: -3px; width: 12px; height: 12px; border-radius: var(--r-full); background: var(--ok); border: 2px solid var(--bg-page); z-index: 5; }
+.brand-status-dot.is-stale { background: transparent; box-shadow: inset 0 0 0 2px var(--line-strong); }
+.brand-name { font-size: 13px; line-height: 18px; font-weight: 500; color: var(--tx-main); }
+.modal-mask { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.35); z-index: 90; align-items: center; justify-content: center; padding: 16px; }
+.modal-mask.is-open { display: flex; }
+.modal-dialog { width: 100%; max-width: 420px; background: var(--bg-panel); border: 0; border-radius: var(--r-xl); box-shadow: var(--sh-float); padding: 20px; position: relative; animation: modalFadeIn var(--t-float) var(--ease-out) forwards; }
+@keyframes modalFadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.modal-title { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: var(--tx-main); }
+.modal-brand-thumb { width: 18px; height: 18px; border-radius: 4px; object-fit: contain; }
+.btn-close { background: transparent; border: 0; color: var(--tx-muted); cursor: pointer; padding: 4px; display: flex; }
+.btn-close svg { width: 16px; height: 16px; }
+.btn-close:hover { color: var(--tx-main); }
+.meta-box { border: var(--hairline) solid var(--line); border-radius: var(--r-lg); padding: 4px 12px; margin-bottom: 16px; }
+.meta-line { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: 12px; }
+.meta-line + .meta-line { border-top: var(--hairline) solid var(--line-weak); }
+.meta-k { color: var(--tx-muted); }
+.meta-v { color: var(--tx-main); font-variant-numeric: tabular-nums; }
+.status-badge { display: inline-flex; align-items: center; gap: 6px; }
+.status-point { width: 8px; height: 8px; border-radius: var(--r-full); background: var(--line-strong); }
+.status-point.ok { background: var(--ok); }
+.notice { width: 100%; max-width: 560px; margin-top: 28px; padding: 12px 14px; border: var(--hairline) solid var(--line); border-radius: var(--r-lg); color: var(--tx-muted); font-size: 12px; line-height: 1.7; }
+.notice a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 160ms var(--ease-out); }
+.notice a:hover { border-bottom-color: var(--accent); }
 </style>
 </head>
 <body>
-<main>
-  <h1>auth-hub</h1>
-  <p class="sub">自用的多平台凭据中枢，给本机程序统一提供 Cookie / 登录态，主要对接 <a href="https://github.com/NanmiCoder/MediaCrawler">MediaCrawler</a> 做采集。</p>
+<div class="app-shell">
+  <header class="header-box">
+    <div class="header-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+    </div>
+    <h1 class="header-title">凭据中枢 · 静态预览</h1>
+  </header>
 
-  <h2>支持平台</h2>
-  <ul>
-    <li><span>哔哩哔哩</span><span>扫码登录</span></li>
-    <li><span>小红书</span><span>Cookie</span></li>
-    <li><span>抖音</span><span>Cookie</span></li>
-    <li><span>微博</span><span>Cookie</span></li>
-    <li><span>百度贴吧</span><span>Cookie</span></li>
-    <li><span>知乎</span><span>Cookie</span></li>
-  </ul>
+  <main class="auth-grid">
+    <div class="brand-card" onclick="openModal('bili', '哔哩哔哩')">
+      <div class="brand-logo-wrap"><span class="brand-status-dot"></span><img class="brand-logo-img" src="assets/bili_logo.png" alt="哔哩哔哩"></div>
+      <span class="brand-name">哔哩哔哩</span>
+    </div>
+    <div class="brand-card" onclick="openModal('xhs', '小红书')">
+      <div class="brand-logo-wrap"><span class="brand-status-dot"></span><img class="brand-logo-img" src="assets/xhs_logo.png" alt="小红书"></div>
+      <span class="brand-name">小红书</span>
+    </div>
+    <div class="brand-card" onclick="openModal('douyin', '抖音')">
+      <div class="brand-logo-wrap"><span class="brand-status-dot"></span><img class="brand-logo-img" src="assets/douyin_logo.png" alt="抖音"></div>
+      <span class="brand-name">抖音</span>
+    </div>
+    <div class="brand-card" onclick="openModal('weibo', '微博')">
+      <div class="brand-logo-wrap"><span class="brand-status-dot"></span><img class="brand-logo-img" src="assets/weibo_logo.png" alt="微博"></div>
+      <span class="brand-name">微博</span>
+    </div>
+    <div class="brand-card" onclick="openModal('tieba', '百度贴吧')">
+      <div class="brand-logo-wrap"><span class="brand-status-dot"></span><img class="brand-logo-img" src="assets/tieba_logo.png" alt="百度贴吧"></div>
+      <span class="brand-name">百度贴吧</span>
+    </div>
+    <div class="brand-card" onclick="openModal('zhihu', '知乎')">
+      <div class="brand-logo-wrap"><span class="brand-status-dot"></span><img class="brand-logo-img" src="assets/zhihu_logo.png" alt="知乎"></div>
+      <span class="brand-name">知乎</span>
+    </div>
+  </main>
 
-  <footer>Personal use only · <a href="https://github.com/mathmonstergo/auth-hub">GitHub</a></footer>
-</main>
+  <div class="notice">
+    这是 GitHub Pages 上的<strong>静态预览</strong>，没有后端：真实控制台跑在本机 <code>127.0.0.1:8318</code>，前面挂 Nginx 与隐藏路径，负责六个平台的凭据保存与探活。<br>
+    自用项目，仅供学习研究，禁止商业使用。源码：<a href="https://github.com/mathmonstergo/auth-hub">github.com/mathmonstergo/auth-hub</a>
+  </div>
+</div>
+
+<div id="modal-mask" class="modal-mask" onclick="handleMaskClick(event)">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <span class="modal-title">
+        <img id="m-logo" class="modal-brand-thumb" src="assets/bili_logo.png" alt="">
+        <span id="m-title">凭据</span>
+      </span>
+      <button class="btn-close" onclick="closeModal()" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div class="meta-box">
+      <div class="meta-line">
+        <span class="meta-k">凭据状态</span>
+        <span class="status-badge"><span class="status-point ok"></span><span class="meta-v">正常</span></span>
+      </div>
+      <div class="meta-line">
+        <span class="meta-k">更新时间</span>
+        <span class="meta-v">静态预览占位</span>
+      </div>
+    </div>
+    <div class="notice" style="margin-top:0;">
+      预览页展示的是界面形态，真实页面由内嵌服务端渲染，数据来自本机凭据文件与各平台探活结果。
+    </div>
+  </div>
+</div>
+
+<script>
+  const mask = document.getElementById('modal-mask');
+  const logo = document.getElementById('m-logo');
+  const title = document.getElementById('m-title');
+
+  function openModal(key, name) {
+    logo.src = 'assets/' + key + '_logo.png';
+    title.innerText = name + '凭据';
+    mask.classList.add('is-open');
+  }
+  function closeModal() { mask.classList.remove('is-open'); }
+  function handleMaskClick(e) { if (e.target === mask) closeModal(); }
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && mask.classList.contains('is-open')) closeModal();
+  });
+</script>
 </body>
 </html>
